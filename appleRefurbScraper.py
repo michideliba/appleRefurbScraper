@@ -4,11 +4,16 @@ import pprint
 import requests
 from bs4 import BeautifulSoup
 
+# for US setting
 domain = 'https://www.apple.com/shop/refurbished/'
-scrapList = ['mac', 'ipad', 'iphone', 'watch', 'ipod', 'appletv', 'clearance', 'accessories']
+scrapList = ['mac', 'ipad', 'iphone', 'watch', 'appletv', 'clearance', 'accessories']
+
+# for JP setting
 #domain = 'https://www.apple.com/jp/shop/refurbished/'
-#scrapList = ['mac', 'ipad', 'watch', 'ipod', 'appletv', 'accessories', 'clearance']
-listClass = 'refurbished-category-grid-no-js'
+#scrapList = ['mac', 'ipad', 'watch', 'appletv', 'accessories', 'clearance']
+
+listClass1 = 'rf-refurb-category-grid-no-js'
+listClass2 = 'refurbished-category-grid-no-js'
 listTag = 'li'
 nameTag = 'a'
 priceTag = 'div'
@@ -16,7 +21,9 @@ priceTag = 'div'
 def appleRefurbScraper(req):
   items = []
   soup = BeautifulSoup(req.text, 'html.parser')
-  productList = soup.find('div', class_=listClass)
+  productList = soup.find('div', class_=listClass1)
+  if productList == None:
+    productList = soup.find('div', class_=listClass2)
   for item in productList.find_all(listTag):
     name = item.find(nameTag).text.strip()
     price = item.find(priceTag).text.strip()
